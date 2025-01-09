@@ -149,6 +149,14 @@ async function run() {
       const result = await recommendationsCollection.insertOne(recommendation);
       res.send(result);
     }); 
+    // Get Recommendations for a Query Route - GET
+    app.get("/recommendations/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { queryId: id };
+      const cursor = recommendationsCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // Get My Recommendations Route - GET
     app.get("/my-recommendations/:email", async (req, res) => {
       const email = req.params.email;

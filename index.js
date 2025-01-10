@@ -145,18 +145,18 @@ async function run() {
       });
     // Add Recommendation Route - POST
     app.post("/recommendations", async (req, res) => {
-      const recommendation = req.body;
-      const result = await recommendationsCollection.insertOne(recommendation);
-      res.send(result);
-    }); 
-    // Get Recommendations for a Query Route - GET
-    app.get("/recommendations/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { queryId: id };
-      const cursor = recommendationsCollection.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
-    });
+        const recommendation = req.body;
+        const result = await recommendationsCollection.insertOne(recommendation);
+        res.send(result);
+      }); 
+      // Get Recommendations for a Query Route - GET
+      app.get("/recommendations/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { queryId: id };
+        const cursor = recommendationsCollection.find(query);
+        const result = await cursor.toArray();
+        res.send(result);
+      });
     // Get My Recommendations Route - GET
     app.get("/my-recommendations/:email", async (req, res) => {
       const email = req.params.email;

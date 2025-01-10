@@ -107,15 +107,15 @@ async function run() {
 
     // Delete Query Route - DELETE
     app.delete("/query/:id", async (req, res) => {
-      try {
-        const id = req.params.id;
-        const query = { _id: new ObjectId(id) };
-        const result = await queriesCollection.deleteOne(query);
-        res.send(result);
-      } catch (error) {
-        res.status(500).send({ message: error.message });
-      }
-    });
+        try {
+          const id = req.params.id;
+          const query = { _id: new ObjectId(id) };
+          const result = await queriesCollection.deleteOne(query);
+          res.send(result);
+        } catch (error) {
+          res.status(500).send({ message: error.message });
+        }
+      });
 
     // Update Query Route - PATCH
     app.patch("/query/:id", async (req, res) => {

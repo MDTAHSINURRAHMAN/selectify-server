@@ -119,30 +119,30 @@ async function run() {
 
     // Update Query Route - PATCH
     app.patch("/query/:id", async (req, res) => {
-      try {
-        const id = req.params.id;
-        const filter = { _id: new ObjectId(id) }; // Use ObjectId to query the document
-        const updatedQuery = {
-          $set: {
-            productName: req.body.productName,
-            productBrand: req.body.productBrand,
-            productImageUrl: req.body.productImageUrl,
-            queryTitle: req.body.queryTitle,
-            boycottReason: req.body.boycottReason,
-          },
-        };
-        const result = await queriesCollection.updateOne(filter, updatedQuery);
-        if (result.modifiedCount === 1) {
-          res.send({ message: "Query updated successfully" });
-        } else {
-          res
-            .status(404)
-            .send({ message: "Query not found or no changes made" });
+        try {
+          const id = req.params.id;
+          const filter = { _id: new ObjectId(id) }; // Use ObjectId to query the document
+          const updatedQuery = {
+            $set: {
+              productName: req.body.productName,
+              productBrand: req.body.productBrand,
+              productImageUrl: req.body.productImageUrl,
+              queryTitle: req.body.queryTitle,
+              boycottReason: req.body.boycottReason,
+            },
+          };
+          const result = await queriesCollection.updateOne(filter, updatedQuery);
+          if (result.modifiedCount === 1) {
+            res.send({ message: "Query updated successfully" });
+          } else {
+            res
+              .status(404)
+              .send({ message: "Query not found or no changes made" });
+          }
+        } catch (error) {
+          res.status(500).send({ message: error.message });
         }
-      } catch (error) {
-        res.status(500).send({ message: error.message });
-      }
-    });
+      });
     // Add Recommendation Route - POST
     app.post("/recommendations", async (req, res) => {
       const recommendation = req.body;

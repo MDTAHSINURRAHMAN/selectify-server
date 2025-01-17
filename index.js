@@ -63,7 +63,7 @@ async function run() {
       }
     });
 
-    // Get My Queries Route - GET
+    // Get My Queries Route - GET REQUEST
     app.get("/my-queries/:email", async (req, res) => {
       try {
         const email = req.params.email;

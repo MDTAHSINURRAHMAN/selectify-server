@@ -24,7 +24,7 @@ async function run() {
     // Connect to MongoDB before running any operations
     await client.connect();
     await client.db("admin").command({ ping: 1 });
-    console.log("Successfully connected to MongoDB!");
+    // console.log("Successfully connected to MongoDB!");
     // Connect to the collections
     const database = client.db("selectifyDB");
     const queriesCollection = database.collection("queries");
@@ -40,7 +40,7 @@ async function run() {
     // Add Query Route - POST
     app.post("/add-query", async (req, res) => {
       try {
-        console.log("Request body:", req.body); // Log incoming data
+        // console.log("Request body:", req.body);
         const query = {
           productName: req.body.productName,
           productBrand: req.body.productBrand,
@@ -55,7 +55,7 @@ async function run() {
         };
 
         const result = await queriesCollection.insertOne(query);
-        console.log("Query inserted:", result); // Log success
+        // console.log("Query inserted:", result);
         res.send(result);
       } catch (error) {
         console.error("Error inserting query:", error.message);
@@ -107,56 +107,56 @@ async function run() {
 
     // Delete Query Route - DELETE
     app.delete("/query/:id", async (req, res) => {
-        try {
-          const id = req.params.id;
-          const query = { _id: new ObjectId(id) };
-          const result = await queriesCollection.deleteOne(query);
-          res.send(result);
-        } catch (error) {
-          res.status(500).send({ message: error.message });
-        }
-      });
+      try {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await queriesCollection.deleteOne(query);
+        res.send(result);
+      } catch (error) {
+        res.status(500).send({ message: error.message });
+      }
+    });
 
     // Update Query Route - PATCH
     app.patch("/query/:id", async (req, res) => {
-        try {
-          const id = req.params.id;
-          const filter = { _id: new ObjectId(id) }; // Use ObjectId to query the document
-          const updatedQuery = {
-            $set: {
-              productName: req.body.productName,
-              productBrand: req.body.productBrand,
-              productImageUrl: req.body.productImageUrl,
-              queryTitle: req.body.queryTitle,
-              boycottReason: req.body.boycottReason,
-            },
-          };
-          const result = await queriesCollection.updateOne(filter, updatedQuery);
-          if (result.modifiedCount === 1) {
-            res.send({ message: "Query updated successfully" });
-          } else {
-            res
-              .status(404)
-              .send({ message: "Query not found or no changes made" });
-          }
-        } catch (error) {
-          res.status(500).send({ message: error.message });
+      try {
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id) }; // Use ObjectId to query the document
+        const updatedQuery = {
+          $set: {
+            productName: req.body.productName,
+            productBrand: req.body.productBrand,
+            productImageUrl: req.body.productImageUrl,
+            queryTitle: req.body.queryTitle,
+            boycottReason: req.body.boycottReason,
+          },
+        };
+        const result = await queriesCollection.updateOne(filter, updatedQuery);
+        if (result.modifiedCount === 1) {
+          res.send({ message: "Query updated successfully" });
+        } else {
+          res
+            .status(404)
+            .send({ message: "Query not found or no changes made" });
         }
-      });
+      } catch (error) {
+        res.status(500).send({ message: error.message });
+      }
+    });
     // Add Recommendation Route - POST
     app.post("/recommendations", async (req, res) => {
-        const recommendation = req.body;
-        const result = await recommendationsCollection.insertOne(recommendation);
-        res.send(result);
-      }); 
-      // Get Recommendations for a Query Route - GET
-      app.get("/recommendations/:id", async (req, res) => {
-        const id = req.params.id;
-        const query = { queryId: id };
-        const cursor = recommendationsCollection.find(query);
-        const result = await cursor.toArray();
-        res.send(result);
-      });
+      const recommendation = req.body;
+      const result = await recommendationsCollection.insertOne(recommendation);
+      res.send(result);
+    });
+    // Get Recommendations for a Query Route - GET
+    app.get("/recommendations/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { queryId: id };
+      const cursor = recommendationsCollection.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // Get My Recommendations Route - GET
     app.get("/my-recommendations/:email", async (req, res) => {
       const email = req.params.email;
@@ -185,14 +185,18 @@ async function run() {
     app.patch("/query/:id/increment-recommendations", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await queriesCollection.updateOne(query, { $inc: { recommendationCount: 1 } });
+      const result = await queriesCollection.updateOne(query, {
+        $inc: { recommendationCount: 1 },
+      });
       res.send(result);
     });
     // Decrement Recommendation Count Route - PATCH
     app.patch("/query/:id/decrement-recommendations", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await queriesCollection.updateOne(query, { $inc: { recommendationCount: -1 } });
+      const result = await queriesCollection.updateOne(query, {
+        $inc: { recommendationCount: -1 },
+      });
       res.send(result);
     });
   } finally {
